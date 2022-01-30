@@ -1,0 +1,110 @@
+SQL! - Core querying concepts, insertion, updating, deleting;
+-------------------------------------------------------------------------------------------------
+  DML vs DDL
+  DML and DDL are used in conjunction to create and managed dbs;
+
+  Data manipulation language is a subset of sql methods that allow us to create, read, update, and delete data; (CRUD)
+  Data Definition Language is a subset of methods for defining the structure of a database;
+
+  Commonly, we will define structure, like schema with DDL, and manipulate it with DML;
+  DDL:
+  movie should have id, title, rating, year;
+  DML:
+  give me all movie titles;
+-------------------------------------------------------------------------------------------------
+We'll start with an existing db: library.sql
+
+Basic idea of CRUD:
+  C - Create - INSERT INTO
+  R - Read - SELECT ... FROM
+  U - Update - UPDATE ... SELECT
+  D - Delete - DELETE FROM
+
+Remember: psql < library.sql; to generate dbs from seed;
+once connected to library we can \dt to see the tables within - books/employees
+-------------------------------------------------------------------------------------------------
+*********************STEP ONE*********************
+Retrieve specific data:
+
+  SELECT - the most flexible, powerful command in SQL. Selects rows from tables;
+    *NOTE All sql commands have modifiers. SELECT's Modifiers are:
+     FROM
+     WHERE
+     GROUP BY
+     HAVING
+     ORDER BY
+     LIMIT
+     OFFSET
+
+These will execute in this order;
+-------------------------------------------------------------------------------------------------
+FROM
+  First - within our console we'd type:
+    SELECT * FROM books
+  This list is so dense its impossible to understand without zooming out!
+
+  We should type:
+    **\x auto;**
+  In the console for a legible, expanded version of our table;
+  Note - Console will populate with table data, but does not scroll to the bottom on its own;
+
+  We can SELECT [specific_column]
+  WE can also do something like:
+
+  SELECT author, title from books;
+
+  Later - we wil learn how to get data from multiple tables by 'joining' them; 
+------------------------------------------------------------------------------ ------------------
+WHERE
+  Where allows us to conditionally select data;
+  Simplest form: mathmatical, and boolean assertion;
+  
+  WHERE USES A SINGLE EQUAL SIGN FOR EQUALITY CHECK:
+  
+    SELECT title, price FROM movie WHERE author = 'Kyle Simpson' AND price < 20;
+  We can also use in and not in;
+  SELECT title,autor FROM books WHERE author IN ('iterable list of authors')
+  This could be achieved with OR but IN is more flexible;
+-------------------------------------------------------------------------------------------------
+AGREGATE FUNCTIONS
+  Functions that return a single result from a collection of inputs
+  Simplest form is count();
+    SELECT COUNT(*) FROM books;
+    SELECT MIN(price), MAX(price), avg(price) FROM books;
+    SELECT sum(page_count) FROM books WHERE author = 'J. K. Rowling';
+* Later we'll learn to match without being exact;
+-------------------------------------------------------------------------------------------------
+GROUP BY - Group rows into single columns
+The advantage of grouping rows is to simply reduce our return;
+
+****************COMMON ERROR****************
+  SELECT * FROM books GROUP BY author;
+  -> ERROR:  column "books.author" must appear in the GROUP BY clause or **be used in an aggregate function**
+  This is why we learned aggregate funcs first;
+********************************************
+With groups we can call far more legible data tables:
+
+SELECT author, COUNT(*), avg(page_count) FROM books GROUP BY author;
+
+ -----HAVING - **widdle down our groups**
+Say we ran the code abv and found two outlier authors with far more books than the others.
+We could use having to exclude them from our return;
+SELECT author, COUNT(*), avg(page_count) FROM books GROUP BY author HAVING COUNT(*) < 6;
+-------------------------------------------------------------------------------------------------
+ORDER BY
+Order by is straight forward, and accept asc and desc modifiers;
+We can order our main list and sublists by passing in multiple arguments
+
+SELECT author,title FROM books ORDER BY author,title <- also sorts the titles of duplicates;
+
+-------------------------------------------------------------------------------------------------
+LIMIT - specify number of records to return; 
+OFFSET - used with limit to skip specific results or create pagination;
+Pagination:
+
+  SELECT id, author FROM books LIMIT 5 OFFSET 5;
+
+  SELECT id, author FROM books LIMIT 5 OFFSET 10;
+
+We will see this pattern when trying to present legible chunks of data;
+SELECT  sum(page_count), author FROM books GROUP BY author ORDER BY sum(page_count) desc LIMIT 5
