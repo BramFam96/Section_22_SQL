@@ -1,0 +1,157 @@
+Core:
+--------------------------------------------------------------------------------------------- 
+Databases often have many tables that reference eachother to reduce redundancy;
+We cross reference them, typically by id;
+ie Movies have their own ids, and also a studo_id
+Run \dt in movies_example db to see all the tables!
+---------------------------------------------------------------------------------------------
+**Types of Relationships:**
+---------------------------------------------------------------------------------------------
+One-to-Many (1:M)
+  Like the relationship between our movies and studios:
+    Each studio corresponds to many movies,
+    BUT each movie only belongs to single studio!;
+
+  Users and comments have this relationship: 
+    Users have many comments 
+    comments have one user;
+  
+  (1:M) Relationships are straightforward to join;
+
+Many-to-Many (M:1) *Details on line 105;*
+  Like the relationship between actors and movies;
+  Movies have many actors AND actors star and many movies;
+
+(M:M) - more complex to reference!
+
+Primary-key - unique key for each data entry - typically an id;
+  Later we'll learn how to generate, set, configure, and enforce Primary keys;
+  
+
+Referencing Table vs Referenced Table - table is independent or has foreign keys included?
+Comment table would reference user for example.
+---------------------------------------------------------------------------------------------
+movies.sql
+---------------------------------------------------------------------------------------------
+Creating Primary key:
+
+FROM: movies.sql line 25(creation of movies table): 
+  studio_id INTEGER REFERENCES studios
+This line forces studio_id to match a real id from studios when creating new movies;
+ie 
+  To insert a movie from a new studio, we first need to add the studio!
+---------------------------------------------------------------------------------------------
+Deleting Data:
+We cannot simply delete a referenced table like studio;
+  DELETE FROM studios WHERE id = 1; 
+    -error 'violating foreign key restraints';
+We would need to 
+1) delete the movies referencing studio; 
+2) set the studio_id in our movies to null first; - comments from deleted users
+*We will discuss the pros and cons of these approaches when covering DDL;
+---------------------------------------------------------------------------------------------
+                                      
+                                    JOIN
+
+---------------------------------------------------------------------------------------------
+**Joining tables - JOIN ... ON**
+  These allow us to create tables in memory for quick reference;
+---------------------------------------------------------------------------------------------
+Inner Joins:
+SELECT title,name 
+  FROM movies
+  JOIN studios
+    ON movies.studio_id = studio.id;
+    -> New keyword: ON -> Where a join should overlap; Also determines colum order;
+  -> Generates table response where overlap occurs;
+This is considered an inner join, because it matches conditions in both tables;
+---------------------------------------------------------------------------------------------
+Outer joins: - Left, Right, Full
+  
+  Left - Join all rows of first table (Left) with matching rows from a second table;
+  Right - Join matching rows of first table (Left) with all rows from a second table;
+  Full - Join all rows from all tables;
+
+Examples--------------------------------------------------------------------------------------
+See sql-joins.png;
+Outer joins work on data that is not overlapping;
+  For this example we'll need to create a couple movies, and studios that are not related:
+
+  INSERT INTO movies (title, release_year, runtime, rating) 
+    VALUES ('Le Test Movie', 2020, 90, 'R'), ('Le Test 2 - The testing', 2021, 120, 'R');
+
+  INSERT INTO studios (name, founded_in) 
+    VALUES ('Ez studios', '2019-02-02'),('Some Guy', '2021-10-11');
+
+Outer join:
+
+SELECT title, name as studio_name FROM movies LEFT JOIN studios ON movies.studios_id=studios.id;
+Our generated table contains all movies, and where they match we've pulled the studio_name;
+
+outer joins are helpful for finding rows in one table with no match in another;
+
+---------------------------------------------------------------------------------------------
+JOINS - cont;
+Joins can be combined with methods and aggregate funcs!
+
+SELECT name, COUNT(*) 
+  FROM movies JOIN studios 
+    ON movies.studio_id = studios.name
+      GROUP BY studios.name
+        ORDER BY COUNT(*) DESC;
+---------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------
+DETOUR TIME ->
+Many-to-Many (M:M)
+Consider we have many actors, associated with many movies;
+------------------------------------TLDR-----------------------------------------------------
+*Data with (M:M) relationships require an unexpected THIRD TABLE* - a join table
+---------------------------------------------------------------------------------------------
+We might take the foreign key approach 
+
+where we make actors with and id and name like our other tables;
+
+But to do this we would wind up having to make columns for the max number
+of cast members in any movie! 
+
+The same problem arises if we store movie_ids in our actors table!
+---------------------------------------------------------------------------------------------
+Instead we use a third table:
+This third table is used to store movie_id and actor_id;
+Conveniently we can call this table role; 
+ *Naming is going to be issue with these tables; typical name1_name2
+---------------------------------------------------------------------------------------------
+Many-to-Many considerations:
+---------------------------------------------------------------------------------------------
+INSERT - we've constrained both ids to ones that exist in the other tables;
+DELETE -
+Remember trying to delete a studio? We got a 'violates foreign key restraint error'
+  Well now our table is entirely foreign keys )':
+Thankfully when we constructed roles differently;
+  
+  movie_id INTEGER REFERENCES movies *ON DELETE CASCADE*,
+  actor_id INTEGER REFERENCES actors *ON DELETE CASCADE*
+  
+    with ON DELETE CASCADE we can delete indivdual movies/actors
+      instead of foreign key error, roles will delete the references itself!
+---------------------------------------------------------------------------------------------
+JOIN - Say we want to match actors to movies: 
+  We need to use our custom join table for this!
+Doing this requires a TRIIIIPLE join;
+
+SELECT title, CONCAT(first_name,' ',last_name) as name 
+FROM roles 
+  JOIN actors 
+    ON roles.actor_id = actors.id
+  #THE SECOND JOOOOIN
+  JOIN movies 
+    ON roles.movie_id = movies.id;
+
+**Can be annoying typing table names repeatedly; We can sub them for var names like so:
+SELECT m.title, CONCAT(a.first_name,' ',a.last_name) as name 
+FROM movies m 
+  JOIN roles r
+    ON r.movie_id = m.id
+  #THE SECOND JOOOOIN
+  JOIN actors a 
+    ON r.actor_id = a.id;

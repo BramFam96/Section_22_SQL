@@ -1,0 +1,6 @@
+From before:
+
+SELECT *
+FROM roles r 
+JOIN movies m ON r.movies_id = m.id
+JOIN actors a ON r.actor_id = a.id
