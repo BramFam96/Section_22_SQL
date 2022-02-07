@@ -1,0 +1,50 @@
+DROP DATABASE IF EXISTS league_db;
+CREATE DATABASE league_db;
+
+\c league_db;
+
+CREATE TABLE teams (
+id SERIAL PRIMARY KEY, 
+name text UNIQUE NOT NULL 
+);
+
+CREATE TABLE players (
+id SERIAL PRIMARY KEY,
+name text NOT NULL,
+team_id INTEGER REFERENCES teams ON DELETE SET NULL    
+);
+
+CREATE TABLE referees (
+id SERIAL PRIMARY KEY,
+name text NOT NULL   
+);
+
+CREATE TABLE seasons (
+id SERIAL PRIMARY KEY,
+season_start_date DATE NOT NULL,
+season_end_date DATE NOT NULL   
+);
+
+CREATE TABLE matches (
+id SERIAL PRIMARY KEY ,  
+start_time timestamp,
+date DATE NOT NULL,
+location varchar(20),
+home_team_id INTEGER REFERENCES teams ON DELETE SET NULL,
+away_team_id INTEGER REFERENCES teams ON DELETE SET NULL,
+season_id INTEGER REFERENCES seasons ON DELETE CASCADE,
+ref1_id INTEGER REFERENCES referees ON DELETE SET NULL
+);
+
+CREATE TABLE goals (
+id SERIAL PRIMARY KEY,
+player_id INTEGER REFERENCES players ON DELETE SET NULL,
+match_id INTEGER REFERENCES matches ON DELETE SET NULL  
+);
+
+CREATE TABLE results (
+  id SERIAL PRIMARY KEY,
+  player_id INTEGER REFERENCES players ON DELETE SET NULL,
+  match_id INTEGER REFERENCES matches ON DELETE SET NULL, 
+  team_id INTEGER REFERENCES teams ON DELETE SET NULL 
+);

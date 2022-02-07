@@ -155,3 +155,5 @@ FROM movies m
   #THE SECOND JOOOOIN
   JOIN actors a 
     ON r.actor_id = a.id;
+ALTER TABLE orders
+    ADD CONSTRAINT fk_orders_customers FOREIGN KEY (customer_id) REFERENCES customers (id);
