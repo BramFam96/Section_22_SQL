@@ -1,0 +1,16 @@
+<body>
+	<h1>Pets</h1>
+	<ul>
+		{% for pet in pets %}
+		<!-- wrap link in href -->
+		<li><a href="/{{ pet.id }}">{{ pet.name }} the {{pet.species}} </a></li>
+		{% endfor %}
+	</ul>
+	<h2>Add Pet</h2>
+	<form action="/" method="POST">
+		<p>Name: <input name="name" type="text" /></p>
+		<p>Species: <input name="species" type="text" /></p>
+		<p>Hunger: <input name="hunger" type="number" /></p>
+		<button>Save</button>
+	</form>
+</body>

@@ -4,7 +4,7 @@ from app import app
 from models import db, Pet
 
 # Use test database and don't clutter tests with SQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///sqla_intro_test'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///pet_shop_test'
 app.config['SQLALCHEMY_ECHO'] = False
 
 db.drop_all()
@@ -13,12 +13,12 @@ db.create_all()
 
 class PetModelTestCase(TestCase):
     """Tests for model for Pets."""
-
+    # Runs before all tests;
     def setUp(self):
         """Clean up any existing pets."""
 
         Pet.query.delete()
-
+    # Runs after all tests;
     def tearDown(self):
         """Clean up any fouled transaction."""
 

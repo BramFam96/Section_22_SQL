@@ -15,13 +15,14 @@ _Modeling relationships_
 
 ## Creating and dropping a new db
 
-_from linux terminal without connecting to anything_
-
-- createdb new-db
-- dropdb new-db  
-  **from within pysql shell / seed file**
+```sql
+-- from linux terminal without connecting to anything
+createdb new-db
+dropdb new-db
+-- from within pysql shell / seed file
 - CREATE DATABASE new_db
 - DROP DATABASE new_db
+```
 
 ---
 
@@ -29,7 +30,7 @@ _from linux terminal without connecting to anything_
 
 ## DB Initialization
 
-```
+```sql
  DROP DATABASE IF EXISTS example_db;
  CREATE DATABASE example_db;
  \c example_db;
@@ -37,7 +38,7 @@ _from linux terminal without connecting to anything_
 
 ## Table Structure
 
-```
+```sql
 CREATE TABLE name (
   id SERIAL PRIMARY KEY,
   title TEXT,
@@ -79,7 +80,7 @@ SQL will convert nums in general to text;
 
 ---
 
-When defining a particular table, we can specify constraints on columns;
+When defining a particular table, we can specify constraints on columns:
 
 `PRIMARY KEY`  
 `UNIQUE` - verify data is non-duplicating  
