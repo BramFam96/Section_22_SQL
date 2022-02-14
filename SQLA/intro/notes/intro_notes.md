@@ -68,7 +68,7 @@ Instead, we will use python to structure this data into dicts
 
 # File structure
 
-We've been writing this in a single, [boilerplate](boiler_unformatted.py) file.
+We've been writing this in a single, [pet_shop](boiler_unformatted.py) file.
 
 This is unrealistic. Consider that SQLA allows us to write things like:
 
@@ -91,7 +91,7 @@ VALUES
 This straight forward syntax is easier, and indeed, the whole point of **ORMS**  
 We accomplish this by **building models** to talk to our db behind the scenes.  
 These models can become chunky, and so it make sense to seperate them from our main file.
-Check the structure of the local 'boilerplate' folder.
+Check the structure of the local 'pet_shop' folder.
 
 &nbsp;
 
@@ -117,11 +117,11 @@ Modify DATABASE_URL to point to new db
 
 ---
 
-### **Check model section of [models](boilerplate/app.py)**
+### **Check model section of [models](pet_shop/app.py)**
 
 ---
 
-## **Seeding db from [python model](boilerplate/models.py)**
+## **Seeding db from [python model](pet_shop/models.py)**
 
 ---
 
@@ -154,7 +154,7 @@ We need to _**DROP TABLE** table_ in psql before changing our models
 
 ---
 
-We need to import specific models along with db and session in [app](boilerplate/app.py)
+We need to import specific models along with db and session in [app](pet_shop/app.py)
 
 &nbsp;
 
@@ -376,7 +376,7 @@ Let's try an actual query:
 
 ```sql
 ipython
-%run boilerplate/app.py
+%run pet_shop/app.py
 
 Pet.query.filter(Pet.hunger < 50, Pet.species =='dog').all();
 ```
@@ -393,7 +393,7 @@ Just like the **repr** method we can add custom methods on our models
 
 ## Simple method
 
-To create a new method we simply add it to the [Model file](boilerplate/models.py):
+To create a new method we simply add it to the [Model file](pet_shop/models.py):
 
 ```py
 def greet(self):
@@ -404,7 +404,7 @@ We **do not** need to do anything else to use this method
 
 ```sql
 ipython
-%run boilerplate/app.py
+%run pet_shop/app.py
 
 test = Pet.query.get(1);
 test.greet()
@@ -488,7 +488,7 @@ Lets use flask to render our data and create a form for new pets
 Rendering our data as a list:
 
 ```py
-# In boilerplate/app.py
+# In pet_shop/app.py
 
 @app.route('/')
 def list_pets():
@@ -502,7 +502,7 @@ We should structure this as a list and details page;
 We'll want a route like /{id} to return a specific pet's data
 
 ```py
-# In boilerplate/app.py
+# In pet_shop/app.py
 @app.route('/<int:pet_id>')
 def show_pet_details():
    '''Shows details about individual pet'''
@@ -591,7 +591,7 @@ Structural **difference**
 - Model.query.delete() replaces drop tables
 - data is session.add()'d and session.commit()'d
   We run this file with **python file-path**  
-   Reference: [seed file](boilerplate/seed.py)
+   Reference: [seed file](pet_shop/seed.py)
 
 ## Testing
 
@@ -609,7 +609,7 @@ createdb pet_shop_test;
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///pet_shop_test'
 ```
 
-Reference: [Model tests](boilerplate/test_models.py) and [App test](boilerplate/test_app.py)
+Reference: [Model tests](pet_shop/test_models.py) and [App test](pet_shop/test_app.py)
 
 The built in testing module gets tripped up when our files are buried too deep.  
 Remember we can run unittest from the console!
