@@ -1,5 +1,5 @@
 {
-	"python.testing.unittestArgs": ["-v", "-s", ".", "-p", "*_test.py"],
+	"python.testing.unittestArgs": ["-v", "-s", "./SQLA", "-p", "test_*.py"],
 	"python.testing.pytestEnabled": false,
 	"python.testing.unittestEnabled": true
 }

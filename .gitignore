@@ -1,5 +1,7 @@
 /SQLA/intro/notes/venv
-/SQLA/intro/flask-blogly/venv
-/SQLA/intro/flask-blogly/__pycache__
+/SQLA/flask-blogly/venv
+/SQLA/flask-blogly/__pycache__
 
 /SQLA/intro/notes/pet_shop/__pycache__
+SQLA/relationships/venv
+SQLA/relationships/one-to-many/__pycache__
