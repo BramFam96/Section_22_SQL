@@ -33,8 +33,7 @@ class User(db.Model):
   first_name = db.Column(db.String(50), nullable = False)
   last_name = db.Column(db.String(50), nullable = False)
   img_url = db.Column(db.String(250), nullable = True, default=DEFAULT_IMAGE_URL)
-  # Link posts
-  posts = db.relationship("Post", backref='users', cascade="all, delete-orphan")
+
   @property 
   def full_name(s):
     '''Show full name'''
@@ -61,6 +60,8 @@ class Post(db.Model):
   user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id'))
+    # Link posts
+  users = db.relationship("User", backref='posts', cascade="all, delete-orphan")
   @property
   def friendly_date(self):
     """Return nicely-formatted date."""
