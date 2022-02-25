@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+			integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+			crossorigin="anonymous"
+		/>
+		<title>Document</title>
+	</head>
+	<body>
+		<div class="container">
+			<h1 class="display-1">Phone directory</h1>
+			<table class="table table-striped">
+				<thead class="thead-dark">
+					<th>Empolyee</th>
+					<th>State</th>
+					<th>Department</th>
+					<th>Phone Number</th>
+				</thead>
+				<tbody>
+					<!-- We want this structure: -->
+					<!-- 
+        <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr> 
+      -->
+					{%for emp in emps%}
+					<tr>
+						<td>{{emp.name}}</td>
+						<td>{{emp.state}}</td>
+						<td>{{emp.dept.dept_name}}</td>
+						{% if emp.dept.phone %}
+						<!--  -->
+						<td>{{emp.dept.phone}}</td>
+						{% else %}
+						<td class="text-danger">None</td>
+						{% endif %}
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>
