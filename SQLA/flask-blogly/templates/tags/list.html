@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+<!--  -->
+{% block title %}
+<h1 class="ml-2 border-bottom-4">Tags</h1>
+{% endblock %}
+<!--  -->
+{% block content %}
+<div class="ml-2">
+	{% for tag in tags %}
+	<!-- wrap link in href -->
+	<h2>
+		<a class="text-decoration-none" href="/tags/{{tag.id}}">{{tag.name}}</a>
+	</h2>
+	{% endfor %}
+	<a class="btn btn-primary" href="/tags/new">Add Tag</a>
+</div>
+{% endblock %}

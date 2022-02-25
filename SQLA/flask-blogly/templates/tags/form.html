@@ -1,0 +1,25 @@
+{%extends 'base.html'%} {%block title%}
+<h1 class="ml-2">{{action}} a tag</h1>
+{%endblock%}
+<!--  -->
+{%block content%}
+<!--  -->
+{% if action == 'Add' %}
+<form action="/tags/new" method="POST">
+	<label for="name" class="col-md-2 col-form-label">Name</label>
+	<input name="name" id="name" type="text" />
+	<div class="row">
+		<a href="/tags" class="btn btn-outline-danger ml-4">Back</a>
+		<button class="btn btn-success ml-2">Submit</button>
+	</div>
+</form>
+{%else%}
+<form class="ml-2" action="/tags/{{tag.id}}/edit" method="POST">
+	<label for="name" class="col-md-2 col-form-label">Name</label>
+	<input name="name" type="text" value="{{tag.name}}" />
+	<div class="row">
+		<a href="/tags" class="btn btn-outline-danger ml-4">Back</a>
+		<button class="btn btn-success ml-2">Submit</button>
+	</div>
+</form>
+{%endif%} {%endblock%}

@@ -1,0 +1,39 @@
+{%extends 'base.html'%}
+<!--  -->
+{%block title%}
+<h1 class="ml-2">{{tag.name}}</h1>
+{%endblock%}
+<!--  -->
+{%block content%}
+<!--  -->
+{% if tag.posts %}
+<ol>
+	{% for post in tag.posts %}
+	<li>
+		<a href="/posts/{{post.id}}">{{post.title}}</a>
+	</li>
+	{% endfor %}
+</ol>
+{%else%}
+<p class="ml-2"><em>{{tag.name}}</em> has not been used in any posts</p>
+{% endif %}
+<form class="ml-2">
+	<button class="btn btn-outline-primary" formmethod="GET" formaction="/tags">
+		Home
+	</button>
+	<button
+		class="btn btn-primary"
+		formmethod="GET"
+		formaction="/tags/{{ tag.id }}/edit"
+	>
+		Edit
+	</button>
+	<button
+		class="btn btn-danger"
+		formmethod="POST"
+		formaction="/tags/{{ tag.id }}/delete"
+	>
+		Delete
+	</button>
+</form>
+{%endblock%}

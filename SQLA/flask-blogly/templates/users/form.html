@@ -1,13 +1,38 @@
-{%extends 'base.html'%} {%block title%}
-<h1>{{action}} a user</h1>
-{%endblock%}
+{%extends 'base.html'%} {%block title%} {%if action == 'Edit'%}
+<h1>{{action}} {{user.full_name}}'s info</h1>
+{%else%}
+<h1>{{action}} a new user</h1>
+{%endif%} {%endblock%}
 <!--  -->
 {%block content%}
-<form action="{{submit_route}}" method="POST">
-	<p>First Name <input name="first_name" type="text" /></p>
-	<p>Last Name <input name="last_name" type="text" /></p>
-	<p>Image url <input name="Image_url" type="text" /></p>
-	<button>Submit</button>
+<!--  -->
+{% if action == 'Edit' %}
+<form class="ml-2 column" action="/users/{{user.id}}/edit" method="POST">
+	
+	<label for="first_name" class="col-md-2 col-form-label">First Name
+	<input name="first_name" type="text" value='{{user.first_name}}'/></label>
+	
+	<label for="last_name" class="col-md-2 col-form-label">Last Name
+	<input name="last_name" type="text" value="{{user.last_name}}" /></label>
+	
+	<label for="img_url" class="col-md-2 col-form-label">Image Url
+	<input name="Image_url" type="text" value="{{user.img_url}}" /></label> 
+	<button class="btn btn-success">Submit</button>
 </form>
-<a href="/users">Back</a>
+	{%else%}
+<form class="ml-2" action="/users/new" method="POST"></form>
+	<label for="first_name" class="col-md-2 col-form-label">First Name
+	<input name="first_name" type="text" /></label>
+
+	<label for="last_name" class="col-md-2 col-form-label">Last Name
+	<input name="last_name" type="text" /></label>
+
+	<label for="img_url" class="col-md-2 col-form-label">Image Url
+	<input name="Image_url" type="text" /></label> 
+	<button class="btn btn-success">Submit</button>
+</form>
+		{%endif%}
+
+
+<a href="/users" class="btn btn-outline-danger ml-2">Back</a>
 {%endblock%}

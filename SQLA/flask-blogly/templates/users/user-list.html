@@ -1,17 +1,21 @@
 {%extends 'base.html'%}
 <!--  -->
 {%block title%}
-<h1>Users</h1>
+<h1 class="ml-2">Users</h1>
 {% endblock %}
 <!--  -->
 {%block content%}
-<ul>
+<div class="ml-2">
 	{% for user in users %}
 	<!-- wrap link in href -->
-	<li>
-		<a href="/users/{{user.id}}">{{user.first_name}} {{user.last_name}}</a>
-	</li>
+	<h2>
+		<a href="/users/{{user.id}}">{{user.full_name}}</a>
+	</h2>
 	{% endfor %}
-</ul>
-<a href="/users/new">Add User</a>
+
+	<div classname="row">
+		<a class="btn btn-primary" href="/">Home</a>
+		<a class="btn btn-success" href="/users/new">New User</a>
+	</div>
+</div>
 {% endblock %}
